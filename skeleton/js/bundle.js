@@ -89,25 +89,65 @@ class View {
     this.$el = $el;
     this.game = game;
     this.setupBoard();
+    this.bindEvents();
   }
 
-  bindEvents() {}
+  bindEvents() {
+    let $square = $("li");
+    $square.click( e => {
+      let $pos = ($(e.currentTarget));
+      this.makeMove($pos);
+    });
 
-  makeMove($square) {}
+  }
+
+  makeMove($square) {
+    const pos = $square.data("pos");
+     const currentPlayer = this.game.currentPlayer;
+
+     try {
+       this.game.playMove(pos);
+     } catch (e) {
+       alert("Invalid move! Try again.");
+       return;
+     }
+
+     $square.addClass(currentPlayer);
+
+     if (this.game.isOver()) {
+       // cleanup click handlers.
+       this.$el.off("click");
+       this.$el.addClass("game-over");
+
+       const winner = this.game.winner();
+       const $figcaption = $("<figcaption>");
+
+       if (winner) {
+         this.$el.addClass(`winner-${winner}`);
+         $figcaption.html(`You win, ${winner}!`);
+       } else {
+         $figcaption.html("It's a draw!");
+       }
+
+       this.$el.append($figcaption);
+     }
+
+  }
 
   setupBoard() {
-    const rowIdx = this.$el.find(".row").length;
-    const $row = $("<ul>").addClass("row").addClass("group");
-    for (let colIdx = 0; colIdx < 3; colIdx++) {
-      const $square = $("<li>").addClass("square");
-      $square.css("background-color", "grey" );
-      $square.css({"border-color": "#C1E0FF", 
-             "border-weight":"1px",
-             "border-style":"solid"});
-      $row.append($square);
+
+    for (let i = 0; i < 3; i++) {
+
+      const $ul = $("<ul></ul>");
+      for (let j = 0; j < 3; j++) {
+        const $li = $("<li></li>");
+        $li.data("pos", [i, j]);
+        $ul.append($li);
+      }
+      this.$el.append($ul);
     }
-    this.$el.append($row);
   }
+
 }
 
 module.exports = View;
