@@ -17,6 +17,7 @@ class View {
       }
       this.$el.append($ul);
     }
+    $ul.addClass('bottomLayer');
   }
 
 
@@ -45,6 +46,7 @@ class View {
   }
 
   clickTower() {
+
 
   }
 }
