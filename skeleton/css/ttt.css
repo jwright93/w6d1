@@ -1,7 +1,6 @@
 ul {
   list-style-type: none;
   width: 600px;
-
   margin: 0px;
   display: flex;
   flex-direction: row;
